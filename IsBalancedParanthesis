@@ -1,0 +1,36 @@
+public class Solution {
+    public bool IsValid(string s) {
+        
+        Stack<Char> st = new Stack<Char>();
+        foreach(Char ch in s){
+           if(ch=='(' | ch=='{' | ch=='[') {
+               st.Push(ch);
+           }
+            else{
+                if(st.Count==0){return false;}
+                if(!isValid(st,ch)){
+                    return false;
+                }
+                st.Pop();
+                
+            }
+          
+        }
+          if(st.Count==0)return true;
+            return false;
+    }
+    
+    public bool isValid(Stack<Char> st,Char c){
+        Char b = st.Peek();
+        if(b=='(' & c==')'){
+            return true;
+        }
+        if(b=='{' & c=='}'){
+            return true;
+        }
+        if(b=='[' & c==']'){
+            return true;
+        }
+        return false;
+    }
+}
