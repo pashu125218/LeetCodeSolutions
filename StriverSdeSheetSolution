@@ -1,0 +1,299 @@
+public class Solution
+{
+    public static void Main()
+    {
+        Solution solution = new Solution();
+        solution.ReverseWords("  hello world  ");
+    }
+    
+    public void SetZeroes(int[][] matrix)
+    {
+        int row = matrix.Length;
+        int col = matrix[0].Length;
+        int[] rows = new int[row];
+        int[] cols = new int[col];
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (matrix[i][j] == 0)
+                {
+                    rows[i] = 1;
+                    cols[i] = 1;
+                }
+            }
+        }
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                if (rows[i] == 1 || cols[i] == 1)
+                {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+    }
+    
+    public IList<IList<int>> GeneratePascalTraingle(int numRows)
+    {
+        List<IList<int>> list = new List<IList<int>>
+        {
+            new List<int> { 1 },
+        };
+
+        for (int i = 1; i < numRows; i++)
+        {
+            List<int> list2 = new List<int>();
+            list2.Add(1);
+            for (int j = 1; j < i; j++)
+            {
+                list2.Add(list[i - 1][j - 1] + list[i - 1][j]);
+            }
+            list2.Add(1);
+            list.Add(list2);
+        }
+
+        return list;
+    }
+
+    public int MaxSumSubArray(int[] nums)
+    {
+        //Input: nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+        //Output: 6
+        //Explanation: [4,-1,2,1] has the largest sum = 6.
+        int result = int.MinValue;
+        int sum = 0;
+
+        for (int i = 0; i < nums.Length; i++)
+        {
+            sum = sum + nums[i];
+            result = Math.Max(result, sum);
+
+            if (sum < 0)
+            {
+                sum = 0;
+            }
+        }
+        return result;
+
+
+    }
+
+    public int MaxProfit(int[] prices)
+    {
+        //Input: prices = [7, 1, 5, 3, 6, 4]
+        //Output: 5
+        int profit = 0;
+        int buy = prices[0];
+        for (int i = 1; i < prices.Length; i++)
+        {
+            buy = Math.Min(buy, prices[i]);
+            profit = Math.Max(profit, prices[i] - buy);
+        }
+        return profit;
+
+    }
+
+    public void RotateArray(int[][] matrix)
+    {
+        int row = matrix.Length;
+        int col = matrix[0].Length;
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = i + 1; j < col; j++)
+            {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+        for (int i = 0; i < row; i++)
+        {
+            int left = 0;
+            int right = col - 1;
+            while (left < right)
+            {
+                int temp = matrix[i][left];
+                matrix[i][left] = matrix[i][right];
+                matrix[i][right] = temp;
+            }
+
+        }
+    }
+    
+    public int[][] Transpose(int[][] matrix)
+    {
+        int row = matrix.Length;
+        int col = matrix[0].Length;
+
+        int[][] res = new int[col][];
+        for (int i = 0; i < row; i++)
+        {
+            res[i] = new int[col];
+        }
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = i + 1; j < col; j++)
+            {
+                res[j][i] = matrix[i][j];
+
+            }
+        }
+        return res;
+    }
+
+    public int FindDuplicate(int[] nums)
+    {
+        Array.Sort(nums);
+        int res = 0;
+        for (int i = 1; i < nums.Length; i++)
+        {
+            if (nums[i - 1] == nums[i])
+            {
+                res = nums[i];
+            }
+        }
+        return res;
+
+    }
+
+    public bool SearchMatrix(int[][] matrix, int target)
+    {
+        for (int i = 0; i < matrix.Length; i++)
+        {
+            for (int j = 0; j < matrix[i].Length; j++)
+            {
+                if (matrix[i][j] == target) { return true; }
+            }
+        }
+        return false;
+    }
+
+    public void SortColorsof012(int[] nums)
+    {
+        int low = 0;
+        int high = nums.Length - 1;
+        int mid = 0;
+        int temp = 0;
+
+        while (mid <= high)
+        {
+            switch (nums[mid])
+            {
+                case 0:
+                    temp = nums[low];
+                    nums[low] = nums[mid];
+                    nums[mid] = temp;
+                    mid++;
+                    low++;
+                    break;
+                case 1:
+                    mid++;
+                    break;
+
+                case 2:
+                    temp = nums[high];
+                    nums[high] = nums[mid];
+                    nums[mid] = temp;
+                    high--;
+                    break;
+            }
+        }
+    }
+
+    public int LengthOfLongestSubstringWithoutReapeatingChar(string s)
+    {
+        int res = 0;
+        HashSet<char> hs= new HashSet<char> ();
+
+        int left = 0;
+        int right = 0;
+        while (right < s.Length)
+        {
+            if (!hs.Contains(s[right]))
+            {
+                hs.Add(s[right]);
+                right++;
+                res = Math.Max(hs.Count, res);
+            }
+            else
+            {
+                hs.Remove(s[left]);
+                left++;
+            }
+        }
+        return res;
+       
+    }
+
+    public int SubarraySumEqualK(int[] nums, int k)
+    {
+        // check this
+        int res = 0;
+        int sum = 0;
+        Dictionary<int,int> map = new Dictionary<int, int> ();  
+
+        for(int i = 0; i < nums.Length; i++)
+        {
+            sum = sum + nums[i];
+            if (sum == k)
+            {
+                res = Math.Max(res,i);
+            }
+            else
+            {
+                if (map.ContainsKey(sum))
+                {
+                    res= Math.Max(res,map[sum]-i);
+                }
+                else
+                {
+                    map.Add(sum, i);
+                }
+            }
+        }
+        return res;
+    }
+
+    public string ReverseWords(string s)
+    {
+        Stack<string> stack = new Stack<string>();
+
+        string str = s.Trim();
+        string res = "";
+        string word = string.Empty;
+        int start = 0;
+
+        while (start < s.Length)
+        {
+
+            if (str[start] == ' ') { start++; continue; }
+            while (start < s.Length && str[start] != ' ')
+            {
+                word = word + str[start];
+                start++;
+            }
+            if (word.Length > 0)
+            {
+                stack.Push(word);
+                word = string.Empty;
+
+            }
+        }
+
+
+
+        foreach (string st in stack)
+        {
+            res = res + ' ' + st;
+        }
+        return res.Trim();
+    }
+}
