@@ -1,3 +1,5 @@
+using System.Collections;
+
 public class Solution
 {
     public static void Main()
@@ -5,7 +7,6 @@ public class Solution
         Solution solution = new Solution();
         solution.ReverseWords("  hello world  ");
     }
-    
     public void SetZeroes(int[][] matrix)
     {
         int row = matrix.Length;
@@ -37,7 +38,6 @@ public class Solution
         }
 
     }
-    
     public IList<IList<int>> GeneratePascalTraingle(int numRows)
     {
         List<IList<int>> list = new List<IList<int>>
@@ -125,8 +125,11 @@ public class Solution
             }
 
         }
+
+
+
+
     }
-    
     public int[][] Transpose(int[][] matrix)
     {
         int row = matrix.Length;
@@ -211,7 +214,7 @@ public class Solution
     public int LengthOfLongestSubstringWithoutReapeatingChar(string s)
     {
         int res = 0;
-        HashSet<char> hs= new HashSet<char> ();
+        HashSet<char> hs = new HashSet<char>();
 
         int left = 0;
         int right = 0;
@@ -230,7 +233,7 @@ public class Solution
             }
         }
         return res;
-       
+
     }
 
     public int SubarraySumEqualK(int[] nums, int k)
@@ -238,20 +241,20 @@ public class Solution
         // check this
         int res = 0;
         int sum = 0;
-        Dictionary<int,int> map = new Dictionary<int, int> ();  
+        Dictionary<int, int> map = new Dictionary<int, int>();
 
-        for(int i = 0; i < nums.Length; i++)
+        for (int i = 0; i < nums.Length; i++)
         {
             sum = sum + nums[i];
             if (sum == k)
             {
-                res = Math.Max(res,i);
+                res = Math.Max(res, i);
             }
             else
             {
                 if (map.ContainsKey(sum))
                 {
-                    res= Math.Max(res,map[sum]-i);
+                    res = Math.Max(res, map[sum] - i);
                 }
                 else
                 {
@@ -296,4 +299,193 @@ public class Solution
         }
         return res.Trim();
     }
+
+    public string LongestPalindrome(string s)
+    {
+        int[] res = new int[2] { 0, 1 };
+        for (int i = 0; i < s.Length; i++)
+        {
+            Palindrome(i, i, s, res);
+            Palindrome(i, i + 1, s, res);
+        }
+        return s.Substring(res[0], res[1]);
+    }
+
+    private void Palindrome(int start, int end, string s, int[] res)
+    {
+        while (start > 0 && end < s.Length && s[start] == s[end])
+        {
+            start--;
+            end++;
+        }
+        if (end - start + 1 >= res[1])
+        {
+            res[0] = start;
+            res[1] = end - start + 1;
+        }
+    }
+
+    public int RomanToInt(string s)
+    {
+        if (!string.IsNullOrEmpty(s))
+        {
+            int result = HelperRomanToInt(s[s.Length - 1]);
+            for (int i = s.Length - 2; i >= 0; i--)
+            {
+                if (HelperRomanToInt(s[i]) < HelperRomanToInt(s[i + 1]))
+                {
+                    result = result - HelperRomanToInt(s[i]);
+                }
+                else
+                {
+                    result = result + HelperRomanToInt(s[i]);
+                }
+            }
+            return result;
+        }
+        return 0;
+    }
+
+    public static int HelperRomanToInt(char c)
+    {
+        switch (c)
+        {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+        };
+        return 0;
+    }
+
+    public int UniquePaths(int m, int n)
+    {
+        int[,] dp = new int[m, n];
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                dp[i, j] = -1;
+            }
+        }
+        return HelperUniquePaths(m - 1, n - 1, dp);
+    }
+
+    public int HelperUniquePaths(int m, int n, int[,] dp)
+    {
+        if (m < 0 || n < 0) return 0;
+        if (m == 0 && n == 0)
+        {
+            return 1;
+        }
+        if (dp[m, n] != -1) { return dp[m, n]; }
+        int left = HelperUniquePaths(n - 1, m, dp);
+        int right = HelperUniquePaths(m - 1, n, dp);
+
+        return dp[m, n] = left + right;
+
+    }
+
+    public IList<int> MajorityElementNBye3(int[] nums)
+    {
+        Dictionary<int, int> map = new Dictionary<int, int>();
+        List<int> res = new List<int>();
+        for (int i = 0; i < nums.Length; i++)
+        {
+            if (map.ContainsKey(nums[i]))
+            {
+                map[nums[i]]++;
+            }
+            else
+            {
+                map.Add(nums[i], 1);
+            }
+        }
+
+        foreach (var item in map)
+        {
+            if (item.Value > nums.Length / 3)
+            {
+                res.Add(item.Key);
+            }
+        }
+        return res;
+    }
+
+    public double MyPow1(double x, int n)
+    {
+        if (n < 0)
+        {
+            x = 1 / x;
+            n = n * -1;
+        }
+        return HelperMyPow(x, n);
+    }
+
+    public double HelperMyPow(double x, int n)
+    {
+        if (n == 0) return 1;
+
+
+        return x * HelperMyPow(x, n - 1);
+    }
+
+    public double MyPow2(double x, int n)
+    {
+        double res = 1.0; ;
+        for (int i = 0; i < n; i++)
+        {
+            res = res * x;
+        }
+        return res;
+    }
+    public int ReversePairs(int[] nums)
+    {
+        //nums[i] > 2 * nums[j]
+        int res = 0;
+        for(int i = 0; i < nums.Length; i++)
+        {
+            for(int j=i+1;j< nums.Length; j++)
+            {
+                if(nums[i] -2 * nums[j] >0)
+                {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    public string LongestCommonPrefix(string[] strs)
+    {
+        string s = strs[0];
+        string res = "";
+    
+        for (int k=1;k<strs.Length; k++)
+        {
+            string b = strs[k];
+            int i = 0;
+            int j = 0;
+            while (i < s.Length && j < b.Length)
+            {
+                if (s[i] == b[j])
+                {
+                    res = res + s[i];
+                    i++;
+                    j++;
+                }
+                else { break; }
+            }
+            if (res.Length < s.Length)
+            {
+                s = res;
+                res = "";
+            }
+        }
+        return s;   
+    }
+
 }
